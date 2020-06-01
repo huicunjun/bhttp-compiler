@@ -1,0 +1,3 @@
+rootProject.name='bhttp_compiler_test'
+include ':app'
+include ':bhttp-compiler'
