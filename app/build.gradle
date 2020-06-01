@@ -42,8 +42,9 @@ dependencies {
 
 
     implementation 'com.github.huicunjun:BHttp:0.4'
-    implementation 'com.github.huicunjun:bhttp-annotation-test:0.2'
-    annotationProcessor project(path: ':bhttp-compiler')
+    implementation 'com.github.huicunjun:bhttp-annotation:0.2'
+    annotationProcessor 'com.github.huicunjun:bhttp-compiler:0.1'
+    //annotationProcessor project(path: ':bhttp-compiler')
 
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.7.2'
     implementation 'com.google.code.gson:gson:2.8.6'
