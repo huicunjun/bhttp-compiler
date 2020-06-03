@@ -1,4 +1,4 @@
-package com.ldw.bhttp_compiler
+package com.ldw.bhttp.compiler
 
 import com.ldw.bhttp_annotation.DefaultDomain
 import com.ldw.bhttp_annotation.Parser
@@ -37,8 +37,8 @@ class KotlinProcessor : AbstractProcessor() {
     }
 
     override fun process(
-        annotations: MutableSet<out TypeElement>?,
-        roundEnv: RoundEnvironment?
+            annotations: MutableSet<out TypeElement>?,
+            roundEnv: RoundEnvironment?
     ): Boolean {
         try {
             generate()
@@ -55,24 +55,24 @@ class KotlinProcessor : AbstractProcessor() {
     @Throws(IOException::class)
     private fun generate() {
         val main = MethodSpec.methodBuilder("main")
-            .addModifiers(
-                Modifier.PUBLIC,
-                Modifier.STATIC
-            )
-            .addParameter(Array<String>::class.java, "args")
-            .addStatement("\$T.out.println(\$S)", System::class.java, "Hello World")
-            .addStatement("System.out.println(\$S)", "Hello World")
-            .build()
-        val typeSpec =
-            TypeSpec.classBuilder("HelloWorld")
                 .addModifiers(
-                    Modifier.FINAL,
-                    Modifier.PUBLIC
+                        Modifier.PUBLIC,
+                        Modifier.STATIC
                 )
-                .addMethod(main)
+                .addParameter(Array<String>::class.java, "args")
+                .addStatement("\$T.out.println(\$S)", System::class.java, "Hello World")
+                .addStatement("System.out.println(\$S)", "Hello World")
                 .build()
+        val typeSpec =
+                TypeSpec.classBuilder("HelloWorld")
+                        .addModifiers(
+                                Modifier.FINAL,
+                                Modifier.PUBLIC
+                        )
+                        .addMethod(main)
+                        .build()
         val javaFile = JavaFile.builder("com.bhttp.wrapper.generator", typeSpec)
-            .build()
+                .build()
         //javaFile.writeTo(filer)
     }
 
@@ -95,13 +95,13 @@ class KotlinProcessor : AbstractProcessor() {
         val defaultDomainSet = roundEnv.getElementsAnnotatedWith(DefaultDomain::class.java)
         defaultDomainSet.forEach {
             val typeElement = it as VariableElement
-           val toString = typeElement.simpleName.toString()
+            val toString = typeElement.simpleName.toString()
             //typeElement.g
-           // typeElement.
-          // defaultDomain = "${typeElement.qualifiedName.toString()}.${typeElement.simpleName.toString()}"
+            // typeElement.
+            // defaultDomain = "${typeElement.qualifiedName.toString()}.${typeElement.simpleName.toString()}"
             println("toString")
             println(toString)
-           // println( ClassName.get(typeElement.enclosingElement.asType()))
+            // println( ClassName.get(typeElement.enclosingElement.asType()))
             println(typeElement.enclosingElement.asType())
             defaultDomain = "${typeElement.enclosingElement.asType()}.${toString}"
         }
@@ -129,7 +129,7 @@ class KotlinProcessor : AbstractProcessor() {
 
     override fun getSupportedAnnotationTypes(): Set<String>? {
         val annotations: MutableSet<String> =
-            HashSet()
+                HashSet()
         annotations.add(DefaultDomain::class.java.canonicalName)
         annotations.add(Parser::class.java.canonicalName)
         return annotations
@@ -144,9 +144,9 @@ class KotlinProcessor : AbstractProcessor() {
         var className = "BHttp"
         var packname = "com.bhttp.wrapper.generator"
         private fun replaceClass(ss: String): String {
-          var sss =  ss.replace("BaseBHttp", "$className")
-                .replace("package com.ldw.bhttp;", "package $packname;")
-                .replace("setDefaultDomain(null);", "setDefaultDomain($defaultDomain);")
+            var sss =  ss.replace("BaseBHttp", "$className")
+                    .replace("package com.ldw.bhttp;", "package $packname;")
+                    .replace("setDefaultDomain(null);", "setDefaultDomain($defaultDomain);")
 
             if (asResponseFullName.isNotEmpty()){
                 sss = sss.replace("import com.ldw.bhttp.entry.MyResponse;", "")
@@ -155,8 +155,6 @@ class KotlinProcessor : AbstractProcessor() {
             }
             return sss
         }
-
-        // var data = SimpleDateFormat().format("yyyy/MM/dd HH:ss")//2020/5/26 19:10
         var ss = """
             
 package com.ldw.bhttp;
@@ -304,6 +302,7 @@ public class BaseBHttp<T> {
         client.param.setParamType(ParamType.Json);
         return client;
     }
+
     @NotNull
     public static BaseBHttp<?> postPath(String url) {
         BaseBHttp<?> client = new BaseBHttp<>();
@@ -312,6 +311,7 @@ public class BaseBHttp<T> {
         client.param.setParamType(ParamType.Path);
         return client;
     }
+
     @NotNull
     public static BaseBHttp<?> putFrom(@NotNull String s) {
         BaseBHttp<?> client = new BaseBHttp<>();
@@ -329,6 +329,7 @@ public class BaseBHttp<T> {
         client.param.setParamType(ParamType.Json);
         return client;
     }
+
     @NotNull
     public static BaseBHttp<?> putPath(String url) {
         BaseBHttp<?> client = new BaseBHttp<>();
@@ -355,6 +356,7 @@ public class BaseBHttp<T> {
         client.param.setParamType(ParamType.Json);
         return client;
     }
+
     @NotNull
     public static BaseBHttp<?> deletePath(String url) {
         BaseBHttp<?> client = new BaseBHttp<>();
@@ -381,6 +383,7 @@ public class BaseBHttp<T> {
         client.param.setParamType(ParamType.Json);
         return client;
     }
+
     @NotNull
     public static BaseBHttp<?> patchPath(String url) {
         BaseBHttp<?> client = new BaseBHttp<>();
@@ -389,6 +392,7 @@ public class BaseBHttp<T> {
         client.param.setParamType(ParamType.Path);
         return client;
     }
+
     @NotNull
     public static BaseBHttp<?> get(String url) {
         BaseBHttp<?> client = new BaseBHttp<>();
@@ -671,7 +675,7 @@ public class BaseBHttp<T> {
     }
 
     @SuppressWarnings("unchecked")
-    private T convert(String s, Type returnType, Class<?> tClass) {
+    private T convert(String s, Type returnType, Class<?> tClass) throws Exception {
         LogUtils.logd("请求结果：");
         LogUtils.logd(s);
         T convert = null;
@@ -685,7 +689,11 @@ public class BaseBHttp<T> {
             } else
                 convert = (T) new Gson().fromJson(s, tClass);
         }
-        return convert;
+        if (convert != null) {
+            return convert;
+        }
+        throw new Exception("数据为空");
+        //   return convert;
     }
 
     private Handler handler = new Handler(Looper.getMainLooper(), msg -> {
